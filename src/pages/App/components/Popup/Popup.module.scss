@@ -1,0 +1,24 @@
+@use '@styles/utilities.scss' as utils;
+
+.pop-up{
+    position: absolute;
+    top: -1000px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: utils.$calc-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    padding: .5rem 0;
+    cursor: pointer;
+    transition: all 0.35s ease-in-out;
+
+    &:hover{
+        background-color: utils.$result-hover-color;
+    }
+}
+.pop-up.open{
+    top: 0;
+}

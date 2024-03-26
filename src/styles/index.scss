@@ -1,0 +1,59 @@
+@use "./utilities.scss" as utils;
+
+*, *:before, *:after{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: utils.$font-color;
+    font-weight: 500;
+}
+
+html, body, div, span, object, iframe, figure, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, code, em, img, small, strike, strong, sub, sup, tt, b, u, i, ol, ul, li, fieldset, form, label, table, caption, tbody, tfoot, thead, tr, th, td, main, canvas, embed, footer, header, nav, section, video{
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    text-size-adjust: none;
+}
+
+footer, header, nav, section, main{
+    display: block;
+}
+
+body{
+    line-height: 1;
+}
+
+ol, ul{
+    list-style: none;
+}
+
+blockquote, q{
+    quotes: none;
+}
+
+input{
+    -webkit-appearance: none;
+    border-radius: 0;
+    outline: none;
+    border: none;
+}
+button{
+    outline: none;
+    border: none;
+}
+
+.test{
+    position: absolute;
+    top: -1000px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: black;
+    transition: all 0.35s ease-in-out;
+}
+.test.open{
+    top: 0;
+}
