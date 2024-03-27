@@ -19,10 +19,10 @@ const allowedThirdPriorOperations : TAllowedThirdPriorOperation = {
             </span>
         )
     },
-    "tag" : (userInput) => {
+    "tg" : (userInput) => {
         return(
             <span className={operationStyles["trig-oper"]}>
-                {"tag("}<span className={operationStyles["operation-value"]}>{userInput}</span>{")"}
+                {"tg("}<span className={operationStyles["operation-value"]}>{userInput}</span>{")"}
             </span>
         )
     },
@@ -85,7 +85,8 @@ const [FirstPriority, SecondPriority, ThirdPriority] = Priorities;
 // }
 
 const getMathOperation = (input : string) : IMathOperation => {
-    switch(input){
+
+    switch(input.trim()){
         case "+":{
             return{
                 priority: FirstPriority,
@@ -100,43 +101,43 @@ const getMathOperation = (input : string) : IMathOperation => {
         }
         case "*":{
             return{
-                priority: FirstPriority,
+                priority: SecondPriority,
                 performCalculation: multiple
             }
         }
         case "/":{
             return{
-                priority: FirstPriority,
+                priority: SecondPriority,
                 performCalculation: divide
             }
         }
         case "^":{
             return{
-                priority: FirstPriority,
+                priority: ThirdPriority,
                 performCalculation: raiseToPower
             }
         }
         case "!":{
             return{
-                priority: FirstPriority,
+                priority: ThirdPriority,
                 performCalculation: factorial
             }
         }
         case "sin":{
             return{
-                priority: FirstPriority,
+                priority: ThirdPriority,
                 performCalculation: sin
             }
         }
         case "cos":{
             return{
-                priority: FirstPriority,
+                priority: ThirdPriority,
                 performCalculation: cos
             }
         }
-        case "tan":{
+        case "tg":{
             return{
-                priority: FirstPriority,
+                priority: ThirdPriority,
                 performCalculation: tan
             }
         }

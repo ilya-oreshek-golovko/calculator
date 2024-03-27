@@ -1,22 +1,22 @@
-import {useState} from "react";
+import {ReactElement, useState} from "react";
 import styles from "./App.module.scss";
 import Button from "@app-page/components/Button/Button";
-import { IAppState, TPow } from "@/types";
+import { IAppState, IThirdPriorOperationProps, TPow } from "@/types";
 import { useManualInputManagement } from "@/hooks/AppHooks";
 import { allowedOperations } from "@data/globalData";
 import Popup from "@app-page/components/Popup/Popup";
-import { ParserError, PrioritiesError } from "@data/errors";
 import ThirdPriorOperation from "@app-page/components/Operation/ThirdPriorOperation";
+import { parser } from "@/handlers/parser/parser";
 
-const l = (mes : any) => console.log(mes);
+const l = (mes : any, obj ? : any) => obj ? console.log(mes, obj) : console.log(mes);
 
 export default function App() {
-
   
   const [state, setState] = useState<IAppState>({
     input: [],
     result: "",
     isPowEntering: false,
+    isDegreesEntering: false,
     errorMessage: ""
   });
 
@@ -28,6 +28,7 @@ export default function App() {
   function handleButtunInput(inputNumber : string){
 
     const handleEnterInput = () => {
+
       const completePowInput = () => {
         const newInput = state.input.slice(0, state.input.length-1);
         const lastInput = state.input.at(-1);
@@ -42,27 +43,19 @@ export default function App() {
           handleError("Something went wrong during power parsing");
         }
       }
+
       const performResultCalculation = () => {
         try{
-
-        }catch(error){
-          if(error instanceof PrioritiesError){
-
-          }else if(error instanceof ParserError){
-
-          }else{
-            
-          }
+          const result = parser(state.input);
+          setState((prevState) => ({
+            ...prevState,
+            result
+          }));
+        }catch(error : any){
+          handleError(error.message)
         }
-        // const validatedInput = state.input.at(-1) == " " ? state.input.replace(/...$/, "") : state.input;
-        // const firstResult = handleFirstPriority(validatedInput);
-        // const secondResult = handleSecondPriority(firstResult);
-
-        // setState((prevState) => ({
-        //   ...prevState,
-        //   result: secondResult
-        // }));
       } 
+
       if(state.isPowEntering){
         completePowInput();
         return;
@@ -71,27 +64,36 @@ export default function App() {
       performResultCalculation();
     }
 
-    const handlePowInput = () => {
+    const handlePowInput = (newPower : string) => {
       const newInput = state.input.slice(0, state.input.length-1);
-      const powerElement = JSON.stringify(state.input.at(-1));
+      const powerElement = state.input.at(-1) as ReactElement;
+      const {operation : prevOperation, userInput : prevUserInput} = powerElement["props"] as IThirdPriorOperationProps;
 
-      if(!powerElement || !powerElement.match(/\d+/)){
-        handleError("Could not parse the value to be powered");
-        return;
-      }
-
-      const currentPowerVal = powerElement.match(/\d+/)![0];
-
-      if(!currentPowerVal) handleError("Could not parse the value to be powered into Number");
-
-      const newPowerElement = JSON.parse(powerElement.replace(/\d+/, String(currentPowerVal + 1)));
-
-      l(newPowerElement);
       setState((prevState) => ({
         ...prevState,
         isPowEntering: !prevState.isPowEntering,
-        input: [...newInput, newPowerElement]
+        input: [
+          ...newInput, 
+          <ThirdPriorOperation userInput={prevUserInput} operation={prevOperation} power={newPower}/>
+        ]
       }));
+      // if(!powerElement || !powerElement.match(/\d+/)){
+      //   handleError("Could not parse the value to be powered");
+      //   return;
+      // }
+
+      // const currentPowerVal = powerElement.match(/\d+/)![0];
+
+      // if(!currentPowerVal) handleError("Could not parse the value to be powered into Number");
+
+      // const newPowerElement = JSON.parse(powerElement.replace(/\d+/, String(inputNumber)));
+
+      // l(newPowerElement);
+      // setState((prevState) => ({
+      //   ...prevState,
+      //   isPowEntering: !prevState.isPowEntering,
+      //   input: [...newInput, newPowerElement]
+      // }));
     }
 
     const handleNumberInput = () => {
@@ -113,36 +115,62 @@ export default function App() {
       }
     }
 
-    if( inputNumber == "Enter" ){
+    if( (inputNumber == "Enter" || inputNumber == "=" ) && !state.isDegreesEntering){
       handleEnterInput();
-    }
-    else if( state.isPowEntering ){
-      handlePowInput();
-    }
-    else{
+    } else if( (inputNumber == "Enter" || inputNumber == "=" ) && state.isDegreesEntering){
+      completeTrigonometricInput();
+    } else if(state.isPowEntering){
+      handlePowInput(inputNumber);
+    } else if(state.isDegreesEntering){
+      handleTrigonometricInput(inputNumber);
+    } else{
       handleNumberInput();
     }
   }
 
   function isLastOperator(){
     const lastVal = state.input.at(-1);
-    if(!lastVal ){
-      handleError("Test 1: something went wrong");
-      return;
-    }
-    
-    return allowedOperations.includes((lastVal as string).trim());
+    return typeof lastVal == "string" && !Number(lastVal);
   }
 
-  function handleTrigonometric(operationType : "sin" | "cos" | "tan"){
+  function completeTrigonometricInput(){
+    setState(prevState => ({
+      ...prevState,
+      isDegreesEntering: false
+    }));
+  }
+
+  function handleTrigonometricInput(userInput : string){
+    const newInput = state.input.splice(0, state.input.length - 1);
+    const prevOperator = state.input.at(-1) as ReactElement;
+    const {operation, userInput : prevUserInput} = prevOperator["props"] as IThirdPriorOperationProps;
+
+    const newUserInput = prevUserInput == "0" ? userInput : prevUserInput + userInput;
+
+    newInput.push(
+      <ThirdPriorOperation userInput={newUserInput} operation={operation}/>
+    );
+
+    setState(prevState => ({
+      ...prevState,
+      isDegreesEntering: newUserInput.length < 3,
+      input: newInput
+    }));
+  }
+
+  function handleTrigonometric(operationType : "sin" | "cos" | "tg"){
 
     // const newOperation = allowedThirdPriorOperations[operationType].call("");
     // const newInput = [...state.input.slice(-1), newOperation];
 
-    // setState(prevState => ({
-    //   ...prevState,
-    //   input: newInput
-    // }));
+    setState(prevState => ({
+      ...prevState,
+      isDegreesEntering: true,
+      input: [
+        ...prevState.input,
+        <ThirdPriorOperation userInput={"0"} operation={operationType}/>
+      ]
+    }));
   }
 
   function handleOperationInput(inputOperator : string){
@@ -160,7 +188,7 @@ export default function App() {
         case "Xn":
           handlePow("multiple");
           break;
-        case "!":
+        case "X!":
           handleFactorial();
           break;
         case "cos":
@@ -169,17 +197,26 @@ export default function App() {
         case "sin":
           handleTrigonometric("sin");
           break;
-        case "tan":
-          handleTrigonometric("tan");
+        case "tg":
+          handleTrigonometric("tg");
           break;
         default:{
-          const newInput = state.input.slice(0, state.input.length - 1);
           const operatorWithSpaces = " " + inputOperator + " ";
 
-          setState((prevState) => ({
-            ...prevState,
-            input:  isLastOperator() ? [...newInput, operatorWithSpaces] : [...prevState.input, operatorWithSpaces]
-          }));
+          if(isLastOperator()){
+            setState((prevState) => ({
+              ...prevState,
+              input:  [
+                ...prevState.input.slice(0, prevState.input.length - 1), 
+                operatorWithSpaces
+              ]
+            }));
+          }else{
+            setState((prevState) => ({
+              ...prevState,
+              input:  [...prevState.input, operatorWithSpaces]
+            }));
+          }
         }
       }
     }catch(e : any){
@@ -188,33 +225,50 @@ export default function App() {
   } 
 
   function handlePow(powType : TPow){
-    if(!Number(state.input.at(-1))) return;
+    const userInput = state.input.at(-1) as string;
 
-    const newState = {
-      ...state
-    };
-
-    if(powType == "multiple"){
-      newState.isPowEntering = true;
-      newState.input.push(
-        <span className={styles["sup-entering"]}>0</span>
-      )
-    }else{
-      newState.input.push(
-        <ThirdPriorOperation userInput={""} operation={"!"} />
-        //<span className={styles["sup"]}>2</span>
-      );
+    if(!userInput || !Number(userInput)) {
+      handleError("Not possible to parse user input to be powered");
+      return;
     }
 
-    setState(newState);
+    const newInput = state.input.slice(0, state.input.length - 1);
+
+    if(powType == "multiple"){
+      // newInput.push(
+      //   <span className={styles["sup-entering"]}>0</span>
+      // )
+      newInput.push(
+        <ThirdPriorOperation userInput={userInput} operation={"^"} power={"0"}/>
+      )
+    }else if(powType == "square"){
+      newInput.push(
+        <ThirdPriorOperation userInput={userInput} operation={"^"} power={"2"}/>
+      )
+    }
+    
+    setState((prevState) => ({
+      ...prevState,
+      isPowEntering : powType == "multiple",
+      input: newInput
+    }));
+    //console.log("newState", newState);
   }
 
   function handleFactorial(){
-    if(!Number(state.input.at(-1))) return;
+    const userInput = state.input.at(-1) as string;
+    if(isLastOperator()) return;
+
+    const newInput = state.input.slice(0, state.input.length - 1);
+
+    console.log("userInput", userInput);
 
     setState((prevState) => ({
       ...prevState,
-      input:  [...prevState.input , <span className={styles["factorial"]}>!</span>]
+      input:  [
+        ...newInput,
+        <ThirdPriorOperation userInput={userInput} operation={"!"}/>
+      ]
     }));
   }
 
@@ -224,18 +278,25 @@ export default function App() {
     const lastVal = input.at(-1) as string;
     const newInput = input.slice(0, input.length - 1);
 
-    if(Number(lastVal)){
+    // console.log("newInput", newInput);
+    // console.log("input", input);
+    // console.log("lastVal", lastVal);
+
+    if(Number(lastVal) && lastVal.length > 1){
       setState((prevState) => ({
         ...prevState,
         input: [...newInput, lastVal.slice(0, lastVal.length - 1)]
       }));
+
       return;
     }
-
-    setState((prevState) => ({
-      ...prevState,
+ 
+    setState({
+      ...state,
       input: newInput
-    }));
+    });
+    
+    handlePow("square");
   }
 
   function handleFullRemove(){
@@ -243,6 +304,7 @@ export default function App() {
       input: [],
       result: "",
       isPowEntering: false,
+      isDegreesEntering: false,
       errorMessage: ""
     });
   }
@@ -285,7 +347,7 @@ export default function App() {
             <Button text="X!" clickHandler={handleOperationInput}/>
             <Button text="sin" clickHandler={handleOperationInput}/>
             <Button text="cos" clickHandler={handleOperationInput}/>
-            <Button text="tan" clickHandler={handleOperationInput}/>
+            <Button text="tg" clickHandler={handleOperationInput}/>
           </div>
           <div className={styles["numbers-block"]}>
             <Button text="1" clickHandler={handleButtunInput}/>

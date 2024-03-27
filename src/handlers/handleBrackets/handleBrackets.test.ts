@@ -9,7 +9,7 @@ describe("handleBrackets", () => {
     };
 
     const test2 : {input: TParsedUserInput, expectedResult : Error} = {
-        input: ["1", "*", "(", "2", "-", "3", "+", {userInput: "45",operation: "tan"}, ")", "/", "(", "1", "+", "1", "/", {
+        input: ["1", "*", "(", "2", "-", "3", "+", {userInput: "45",operation: "tg"}, ")", "/", "(", "1", "+", "1", "/", {
             userInput: "90",
             operation: "cos"
         }, ")"],
@@ -17,7 +17,7 @@ describe("handleBrackets", () => {
     };
 
     const test3 : {input: TParsedUserInput, expectedResult : string[]} = {
-        input: ["1", "*", "(", "2", "-", "3", "+", {userInput: "0",operation: "tan"}, ")", "/", "(", "1", "+", "1", "/", {
+        input: ["1", "*", "(", "2", "-", "3", "+", {userInput: "0",operation: "tg"}, ")", "/", "(", "1", "+", "1", "/", {
             userInput: "0",
             operation: "cos"
         }, ")"],

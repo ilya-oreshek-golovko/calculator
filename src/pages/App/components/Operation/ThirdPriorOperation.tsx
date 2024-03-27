@@ -8,8 +8,6 @@ export default function ThirdPriorOperation({userInput, operation, power} : IThi
 
         const operationToRender = allowedThirdPriorOperations[operation];
 
-        //const parameters = (power) ? [userInput, power] : [userInput]; 
-
         if(power) return operationToRender(userInput, power);
 
         return operationToRender(userInput);

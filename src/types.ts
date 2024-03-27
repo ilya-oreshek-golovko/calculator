@@ -6,11 +6,8 @@ type TTwoArgsOperations = (first : number, second : number) => number;
 type TPow = "square" | "multiple";
 type TParsedUserInput = Array<string | IThirdPriorOperationProps>;
 type TParserResult = string | null;
-// type TAllowedThirdPriorOperation = {
-//     key : string,
-//     get : (props : string) => ReactElement
-// };
-type TThirdPriorOperation = "sin" | "cos" | "tan" | "^" | "!";
+
+type TThirdPriorOperation = "sin" | "cos" | "tg" | "^" | "!";
 type TAllowedThirdPriorOperation = {
     [key : string] : (userInput : string, power? : string) => ReactElement
 }
@@ -23,6 +20,7 @@ interface IAppState{
     input: Array<string | ReactElement>,
     result: string,
     isPowEntering: boolean,
+    isDegreesEntering : boolean,
     errorMessage: string
 }
 interface IUseManualInputManagement{

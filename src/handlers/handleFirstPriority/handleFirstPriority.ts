@@ -21,11 +21,12 @@ export default function handleFirstPriority(inputStr : Array<string>) : string{
             state.FirstArg = Number(currentVal);
             state.isExcersiceStarted = !state.isExcersiceStarted;
         }else if(!isNumber(currentVal) && state.isExcersiceStarted){
+            console.log("currentVal.trim()");
             const {performCalculation} = getMathOperation(currentVal);
             state.calculator = performCalculation;
         }else if(isNumber(currentVal) && state.isExcersiceStarted){
             state.SecondArg = Number(currentVal);
-            state.FirstArg = state.calculator!(state.FirstArg, state.SecondArg);
+            state.FirstArg = state.calculator(state.FirstArg, state.SecondArg);
         }
     }
     
