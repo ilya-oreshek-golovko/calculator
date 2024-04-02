@@ -1,12 +1,13 @@
 @use '@styles/utilities.scss' as utils;
 
 .pop-up{
+    display: flex;
+    flex-direction: column;
     position: absolute;
     top: -1000px;
     left: 0;
     right: 0;
-    height: 50px;
-    background-color: utils.$calc-color;
+    background-color: utils.$result-color;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,4 +22,11 @@
 }
 .pop-up.open{
     top: 0;
+}
+.pop-up_description{
+    margin-top: 10px;
+    display: block;
+    color: utils.$operations-hover-color;
+    font-size: 13px;
+    text-align: center;
 }

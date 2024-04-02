@@ -8,7 +8,8 @@ module.exports = {
       '@app-page' : path.resolve(__dirname, 'src', 'pages', 'App'),
       '@styles': path.resolve(__dirname, 'src', 'styles'),
       '@handlers': path.resolve(__dirname, 'src', 'handlers'),
-      '@data' : path.resolve(__dirname, 'src', 'data')
+      '@data' : path.resolve(__dirname, 'src', 'data'),
+      '@redux' : path.resolve(__dirname, 'src', 'redux')
     },
   },
 };

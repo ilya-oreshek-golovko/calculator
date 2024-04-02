@@ -27,6 +27,7 @@
       "@handlers/*": ["./src/handlers/*"],
       "@data/*" : ["./src/data/*"],
       "@app-page/*": ["./src/pages/App/*"],
+      "@redux/*": ["./src/redux/*"]
     }
   },
   "include": [

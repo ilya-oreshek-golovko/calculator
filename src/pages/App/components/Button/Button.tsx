@@ -1,11 +1,14 @@
 import { IButtonProps } from "@/types";
 import styles from "@app-page/App.module.scss";
-import { MouseEvent } from "react";
+import { memo } from "react";
 
-export default function Button({text, clickHandler} : IButtonProps) {
+const Button = ({text, onClick} : IButtonProps) => {
+  console.log("Button render");
   return (
-    <button className={styles["button-body"]} onClick={(evt : MouseEvent<HTMLButtonElement>) => clickHandler(evt.currentTarget.innerText)}>
+    <button className={styles["button-body"]} onClick={onClick}>
       {text}
     </button>
   )
 }
+
+export default memo(Button);

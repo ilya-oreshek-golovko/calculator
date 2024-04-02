@@ -6,11 +6,8 @@ import handleFirstPriority from "@handlers/handleFirstPriority/handleFirstPriori
 
 function handlePriorityes(input : TParsedUserInput) {
     const parsedThirdPriority = handleThirdPriority(input);
-    console.log("parsedThirdPriority", parsedThirdPriority);
     const parsedSecondPriority = handleSecondPriority(parsedThirdPriority);
-    console.log("parsedSecondPriority", parsedSecondPriority);
     const result = handleFirstPriority(parsedSecondPriority);
-    console.log("result", result);
 
     return result;
 }

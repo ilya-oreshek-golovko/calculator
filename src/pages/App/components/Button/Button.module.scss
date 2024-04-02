@@ -1,0 +1,9 @@
+@use '@styles/utilities.scss' as utils;
+
+.button-body{
+    background-color: utils.$calc-color;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}

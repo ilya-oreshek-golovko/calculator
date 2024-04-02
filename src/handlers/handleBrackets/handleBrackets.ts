@@ -4,35 +4,28 @@ import { handlePriorityes } from "@handlers/parser/parser";
 export default function handleBrackets(input : TParsedUserInput) : TParsedUserInput{
     if( !input.includes("(") && !input.includes(")") ) return input;
 
-    const state = {
-        isBracketOpen: false,
-        startIndex: -1,
-        endIndex: -1        
-    };
+    const startIndexes : number[] = [];
 
     const resetState = () => {
-        state.endIndex = -1;
-        state.startIndex = -1;
-        state.isBracketOpen = false;
+        // state.endIndex = -1;
+        // state.startIndexes = state.startIndexes.splice(0, state.startIndexes.length - 1);
+        // state.isBracketOpen = false;
     }
 
     return input.reduce((result : TParsedUserInput, currentVal, currentIndex) => {
-        if(currentVal != "(" && !state.isBracketOpen){
+        if(currentVal != "(" && startIndexes.length == 0){
             return[...result, currentVal];
         }else if(currentVal == "("){
-            state.isBracketOpen = !state.isBracketOpen;
-            state.startIndex = currentIndex+1;
-
+            startIndexes.push(currentIndex + 1);
             return result;
         }else if(currentVal == ")"){
-            state.isBracketOpen = !state.isBracketOpen;
-            state.endIndex = currentIndex;
-            const exerciseInsideBrackets = input.slice(state.startIndex, state.endIndex);
+            const exerciseInsideBrackets = input.slice(startIndexes.at(-1), currentIndex);
             const resultInsideBrackets = handlePriorityes(exerciseInsideBrackets);
+            console.log(resultInsideBrackets);
             resetState();
 
             return [...result, resultInsideBrackets];
-        }else if(state.isBracketOpen){
+        }else if(startIndexes.length > 0){
             return result;
         }else{
             throw Error("Check handleBrackets");

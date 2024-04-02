@@ -1,10 +1,13 @@
 import { IPopupProps } from "@/types";
 import styles from "./Popup.module.scss";
 
-export default function Popup({messageToRender, clickHandler} : IPopupProps) {
+export default function Popup({messageToRender, description} : IPopupProps) {
   return (
-    <div onClick={() => clickHandler()} className={styles["pop-up"] + (messageToRender ? " " + styles["open"] : "" )}>
+    <div className={styles["pop-up"] + (messageToRender ? " " + styles["open"] : "" )}>
         {messageToRender}
+        {
+          description && <p className={styles["pop-up_description"]}>{description}</p>
+        }
     </div>
   )
 }

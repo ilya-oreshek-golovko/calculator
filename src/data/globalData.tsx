@@ -28,14 +28,14 @@ const allowedThirdPriorOperations : TAllowedThirdPriorOperation = {
     },
     "^" : (userInput, power) => {
         return(
-            <span className={operationStyles["operation-value"]}>
+            <span className={operationStyles["sup-operation"]}>
                 {userInput}<span className={operationStyles["sup"]}>{power}</span>
             </span>
         )
     },
     "!" : (userInput) => {
         return(
-            <span className={operationStyles["operation-value"]}>
+            <span className={operationStyles["factorial-operation"]}>
                 {userInput}<span className={operationStyles["factorial"]}>!</span>
             </span>
         )
@@ -142,6 +142,7 @@ const getMathOperation = (input : string) : IMathOperation => {
             }
         }
         default:{
+            console.log(input);
             throw Error("Not possible to identify operator");
         }
     }
