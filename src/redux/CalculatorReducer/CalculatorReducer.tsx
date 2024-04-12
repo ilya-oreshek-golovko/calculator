@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ICalculatorSlice } from "./types";
-import { IThirdPriorOperationProps, TBrackets } from "@/types";
+import { IThirdPriorOperationProps, TBrackets, TThirdPriorOperation } from "@/types";
 import { allowedOperations } from "@/data/globalData";
-import ThirdPriorOperation from "@/pages/App/components/Operation/ThirdPriorOperation";
+import ThirdPriorOperation from "@/pages/App/components/Operation";
 import { parser } from "@/handlers/parser/parser";
 import { ReactElement } from "react";
 
@@ -92,13 +92,13 @@ const CalculatorSlice = createSlice({
                 <ThirdPriorOperation key={Math.random()} userInput={userInput} operation={"!"}/>
             ];
         },
-        setTrigonometric(state, {payload}){
+        setTrigonometric(state, {payload} : PayloadAction<{operationType : TThirdPriorOperation}>){
             if(state.isDegreesEntering) throw Error("You haven't completed the previous operation input");
             if(isLastNumber(state.input)) throw Error("Please enter any common operator before proceeding to this input");
             state.input.push(<ThirdPriorOperation key={Math.random()} userInput={"0"} operation={payload.operationType}/>);
             state.isDegreesEntering = true;
         },
-        setCommonOperation(state, {payload}){
+        setCommonOperation(state, {payload} : PayloadAction<{inputOperator : string}>){
             const operatorWithSpaces = " " + payload.inputOperator + " ";
             
             if(state.input.length == 0) return;
@@ -117,7 +117,7 @@ const CalculatorSlice = createSlice({
                 ];
             }
         },
-        setBrackets(state, {payload}){
+        setBrackets(state, {payload} : PayloadAction<{bracket : string}>){
             // TODO common
             if(payload.bracket == ")" && state.openBracketsCount != 0 && (isLastNumber(state.input) || state.input.at(-1) == ")") || payload.bracket == "(" && isLastOperator(state.input)){
                 state.input = [
@@ -129,8 +129,8 @@ const CalculatorSlice = createSlice({
                 throw Error("Invalid brackets input");
             }
         },
-        setMessage(state, {payload}){
-            state.messageToDisplay = payload.message;
+        setMessage(state, {payload} : PayloadAction<string>){
+            state.messageToDisplay = payload;
     
         },
         calculateResult(state){
@@ -156,7 +156,7 @@ const CalculatorSlice = createSlice({
         completeTrigonometricInput(state){
             state.isDegreesEntering = false;
         },
-        addNumber(state, {payload}){
+        addNumber(state, {payload} : PayloadAction<string>){
             if(isLastNumber(state.input)){
                 const lastVal = state.input.at(-1) as string;
                 const newInput = state.input.slice(0, state.input.length - 1);
@@ -172,7 +172,7 @@ const CalculatorSlice = createSlice({
                 throw Error("Please enter any operation before proceed to entering numbers");
             }
         },
-        handlePowInput(state, {payload}){
+        handlePowInput(state, {payload} : PayloadAction<{newPower : string}>){
 
             const powerElement = state.input.at(-1) as ReactElement;
             const {operation : prevOperation, userInput : prevUserInput} = powerElement["props"] as IThirdPriorOperationProps;
@@ -184,7 +184,7 @@ const CalculatorSlice = createSlice({
                 <ThirdPriorOperation key={Math.random()} userInput={prevUserInput} operation={prevOperation} power={payload.newPower}/>
             ];
         },
-        handleTrigonometricInput(state, {payload}){
+        handleTrigonometricInput(state, {payload} : PayloadAction<{userInput : string}>){
             const prevOperator = state.input.at(-1) as ReactElement;
             const {operation, userInput : prevUserInput} = prevOperator["props"] as IThirdPriorOperationProps;
             if(prevUserInput.length == 3) return;
@@ -197,7 +197,6 @@ const CalculatorSlice = createSlice({
             );
 
             state.input = newInput;
-            //state.isDegreesEntering = newUserInput.length < 3;
         }
     }
 });

@@ -1,8 +1,7 @@
-import styles from "./App.module.scss";
-import Popup from "@app-page/components/Popup/Popup";
-import Input from "./modules/Input/Input";
-import Operations from "./modules/Operations/Operations";
-import Numbers from "./modules/Numbers/Numbers";
+import Popup from "@/pages/App/components/Popup";
+import Input from "./modules/Input";
+import Operations from "./modules/Operations";
+import Numbers from "./modules/Numbers";
 import { useAppSelector } from "@/redux/hooks";
 import { useDegreeInput } from "./hooks/AppHooks";
 
@@ -17,10 +16,10 @@ export default function App() {
   const DegreeInput = useDegreeInput();
 
   return (
-    <div className={styles["background"]}>
-      <section className={styles["calc-body"]}>
+    <div className={"background"}>
+      <section className={"calc-body"}>
         <Input />
-        <div className={styles["bottom-block"]}>
+        <div className={"bottom-block"}>
           <Operations />
           <Numbers />
         </div>

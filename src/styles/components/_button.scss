@@ -1,4 +1,4 @@
-@use '@styles/utilities.scss' as utils;
+@use '@styles/abstracts/utilities.scss' as utils;
 
 .button-body{
     background-color: utils.$calc-color;

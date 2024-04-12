@@ -1,5 +1,5 @@
 import { parser, handlePriorityes, parseUserInput } from "./parser";
-import ThirdPriorOperation from "@app-page/components/Operation/ThirdPriorOperation";
+import ThirdPriorOperation from "@/pages/App/components/Operation";
 import { TParsedUserInput } from "@/types";
 
 describe("parser", () => {

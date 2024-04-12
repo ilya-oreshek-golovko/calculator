@@ -3,7 +3,7 @@ import { IThirdPriorOperationProps, IUseManualInputManagement } from "@/types";
 import {allowedInputKeys} from "@/data/globalData";
 import {allowedOperations} from "@/data/globalData";
 import { useAppSelector } from "@/redux/hooks";
-import Popup from "@app-page/components/Popup/Popup";
+import Popup from "@/pages/App/components/Popup";
 
 function useManualInputManagement({handleButtunInput, handleOperationInput, handleLastCharacterRemove, handleFullRemove, AppState} : IUseManualInputManagement){
     

@@ -1,9 +1,9 @@
-import Button from "@pages/App/components/Button/Button";
-import styles from "@app-page/App.module.scss";
+import Button from "@/pages/App/components/Button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearState, setPow, setFactorial, setTrigonometric, setCommonOperation, setBrackets, removeDegreeCharacter, removeLastCharacter, completePowInput} from "@/redux/CalculatorReducer/CalculatorReducer";
 import { MouseEvent, memo, useCallback } from "react";
 import { showMessage } from "@/redux/CalculatorReducer/ActionCreators";
+import { TThirdPriorOperation } from "@/types";
 
 const Operations = () => {
   const dispatch = useAppDispatch();
@@ -65,7 +65,7 @@ const Operations = () => {
 
   const handleTrigonometric = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
     try{
-      const operationType = evt.currentTarget.innerText;
+      const operationType = evt.currentTarget.innerText as TThirdPriorOperation;
       dispatch(setTrigonometric({operationType}));
     }catch(e : unknown){
       console.log("handleTrigonometric", e);
@@ -85,7 +85,7 @@ const Operations = () => {
 
 
   return (
-    <div className={styles["operations-block"]}>
+    <div className={"operations-block"}>
         <Button text="/" onClick={handleCommonOperations}/>
         <Button text="*" onClick={handleCommonOperations}/>
         <Button text="-" onClick={handleCommonOperations}/>

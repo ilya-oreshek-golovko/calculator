@@ -1,5 +1,4 @@
-import Button from "@pages/App/components/Button/Button";
-import styles from "@app-page/App.module.scss";
+import Button from "@/pages/App/components/Button";
 import { useClickManagement } from "./hooks";
 import { memo } from "react";
 
@@ -7,7 +6,7 @@ const Numbers = () => {
   const {handleNumberInput,handleEnterInput} = useClickManagement();
 
   return (
-    <div className={styles["numbers-block"]}>
+    <div className={"numbers-block"}>
         <Button text="1" onClick={handleNumberInput}/>
         <Button text="2" onClick={handleNumberInput}/>
         <Button text="3" onClick={handleNumberInput}/>

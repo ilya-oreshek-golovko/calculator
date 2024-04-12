@@ -72,5 +72,5 @@ interface IUseBracketManagementProps{
 
 export type{
     IButtonProps, IAppState,IUseManualInputManagement, IPopupProps, IThirdPriorOperationProps, IMathOperation, IUseBracketManagementProps,
-    TOneArgOperations, TTwoArgsOperations, TPow, TParsedUserInput, TParserResult, TAllowedThirdPriorOperation, TBrackets, TrigonometricOperations
+    TOneArgOperations, TTwoArgsOperations, TPow, TParsedUserInput, TParserResult, TAllowedThirdPriorOperation, TBrackets, TrigonometricOperations, TThirdPriorOperation
 }
