@@ -1,26 +1,27 @@
 import Button from "@/pages/App/components/Button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { clearState, setPow, setFactorial, setTrigonometric, setCommonOperation, setBrackets, removeDegreeCharacter, removeLastCharacter, completePowInput} from "@/redux/CalculatorReducer/CalculatorReducer";
-import { MouseEvent, memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { showMessage } from "@/redux/CalculatorReducer/ActionCreators";
 import { TThirdPriorOperation } from "@/types";
+import { useManualInputOperations } from "./hooks";
 
 const Operations = () => {
+  
   const dispatch = useAppDispatch();
   const isDegreesEntering = useAppSelector((state) => state.CalculatorReducer.isDegreesEntering);
   const isPowEntering = useAppSelector((state) => state.CalculatorReducer.isPowEntering);
 
-  const handleBrackets = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleBrackets = useCallback(function (userInput? : string){
     try{
-      const bracket = evt.currentTarget.innerText;
-      dispatch(setBrackets({bracket}));
+      userInput && dispatch(setBrackets({bracket : userInput}));
     }catch(e : unknown){
       console.log("handleBrackets", e);
       e instanceof Error && dispatch(showMessage(e.message));
     }
   }, []);
 
-  const handleLastCharacterRemove = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleLastCharacterRemove = useCallback(function (){
     try{
       if(isDegreesEntering) dispatch(removeDegreeCharacter());
       else if(isPowEntering) {
@@ -35,7 +36,7 @@ const Operations = () => {
     }
   }, [isDegreesEntering, isPowEntering]);
 
-  const handleFullRemove = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleFullRemove = useCallback(function (){
     try{
       dispatch(clearState());
     }catch(e : unknown){
@@ -44,17 +45,16 @@ const Operations = () => {
     }
   }, []);
   
-  const handlePow = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handlePow = useCallback(function (userInput? : string){
     try{
-      const powType = evt.currentTarget.innerText;
-      dispatch(setPow({powType}));
+      userInput && dispatch(setPow({powType : userInput}));
     }catch(e : unknown){
       console.log("handlePow", e);
       e instanceof Error && dispatch(showMessage(e.message));
     }
   }, []);
 
-  const handleFactorial = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleFactorial = useCallback(function (){
     try{
       dispatch(setFactorial());
     }catch(e : unknown){
@@ -63,25 +63,26 @@ const Operations = () => {
     }
   }, []);
 
-  const handleTrigonometric = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleTrigonometric = useCallback(function (userInput? : string){
     try{
-      const operationType = evt.currentTarget.innerText as TThirdPriorOperation;
-      dispatch(setTrigonometric({operationType}));
+
+      userInput && dispatch(setTrigonometric({operationType : (userInput as TThirdPriorOperation) }));
     }catch(e : unknown){
       console.log("handleTrigonometric", e);
       e instanceof Error && dispatch(showMessage(e.message));
     }
   }, []);
 
-  const handleCommonOperations = useCallback(function (evt : MouseEvent<HTMLButtonElement>){
+  const handleCommonOperations = useCallback(function (userInput? : string){
     try{
-      const inputOperator = evt.currentTarget.innerText;
-      dispatch(setCommonOperation({inputOperator}));
+      userInput && dispatch(setCommonOperation({inputOperator : userInput}));
     }catch(e : unknown){
       console.log("handleCommonOperations", e);
       e instanceof Error && dispatch(showMessage(e.message));
     }
   }, []);
+
+  useManualInputOperations(handleCommonOperations, handleLastCharacterRemove, handleFullRemove, handleBrackets, handlePow, handleFactorial);
 
 
   return (
@@ -98,8 +99,8 @@ const Operations = () => {
         <Button text="sin" onClick={handleTrigonometric}/>
         <Button text="cos" onClick={handleTrigonometric}/>
         <Button text="tg" onClick={handleTrigonometric}/>
-        <Button text="(" onClick={handleBrackets}/>
-        <Button text=")" onClick={handleBrackets}/>
+        {/* <Button text="(" onClick={handleBrackets}/>
+        <Button text=")" onClick={handleBrackets}/> */}
     </div>
   )
 }

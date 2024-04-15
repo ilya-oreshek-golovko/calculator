@@ -1,7 +1,6 @@
 import { add, cos, divide, factorial, minus, multiple, raiseToPower, sin, tan } from "@handlers/mathOperators/mathOperators";
 import { IMathOperation, TAllowedThirdPriorOperation } from "@/types";
 
-const allowedInputKeys = ["1","2","3","4","5","6","7","8","9","0",".", "Enter"];
 const allowedOperations = ["/","*","+","-"];
 const allowedThirdPriorOperations : TAllowedThirdPriorOperation = {
     "sin" : (userInput) => {
@@ -110,6 +109,6 @@ const getMathOperation = (input : string) : IMathOperation => {
 }
 
 export {
-    allowedInputKeys, allowedOperations, allowedThirdPriorOperations, 
+     allowedOperations, allowedThirdPriorOperations, 
     FirstPriority, SecondPriority, ThirdPriority, getMathOperation
 }

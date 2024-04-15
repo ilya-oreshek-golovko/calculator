@@ -1,4 +1,5 @@
 @use "@styles/abstracts/utilities.scss" as utils;
+@use "@styles/abstracts/media-query.scss" as *;
 
 .background{
     height: 100vh;
@@ -17,7 +18,6 @@
 }
 .calc-body{
     background-color: #6d6d6e;
-    //border: 3px solid utils.$calc-color;
     width: 500px;
     height: 70vh;
     border-radius: 10px;
@@ -26,11 +26,16 @@
     flex-direction: column;
     overflow: hidden;
 
+    @include mQ(500px){
+        width: 100%;
+        height: 100vh;
+    }
+
     .input-block{
         flex: 1;
+        height: 60px;
         width: 100%;
         display: flex;
-        align-items: center;
         .input{
             background-color: transparent;
             width: 100%;
@@ -40,13 +45,16 @@
             justify-content: flex-end;
             align-items: center;
             padding: 0 .5rem;
+            overflow-y: auto;
+            word-wrap: break-word;
+            word-break: break-all;
         } 
     }
 
     .operations-block{
         flex: 1;
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         .button-body{
             &:hover{
                 color: utils.$operations-hover-color;

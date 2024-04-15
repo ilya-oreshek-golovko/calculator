@@ -6,7 +6,11 @@ interface ICalculatorSlice{
     isPowEntering: boolean,
     isDegreesEntering : boolean,
     openBracketsCount : number,
-    messageToDisplay: string
+    messageToDisplay: string,
+    isShowPopup: boolean,
+    popupTitle: string,
+    popupDescription: string,
+    timeoutID?: NodeJS.Timeout
 }
 
 export type{

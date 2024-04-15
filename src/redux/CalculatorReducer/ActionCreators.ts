@@ -1,13 +1,15 @@
 import { AppDispatch } from "@redux/store";
-import { setMessage } from "./CalculatorReducer";
+import { showPopup, hidePopup, setTimeoutID } from "./CalculatorReducer";
 
-const showMessage = (message : string, delay: number = 7000) => (dispatch : AppDispatch) => {
+const showMessage = (message : string, delay: number = 7000, description: string = "") => (dispatch : AppDispatch) => {
 
-    dispatch(setMessage(message));
+    dispatch(showPopup({title: message, description}));
 
-    setTimeout(() => {
-        dispatch(setMessage(""));
+    const timeoutID = setTimeout(() => {
+        dispatch(hidePopup());
     }, delay);
+
+    dispatch(setTimeoutID({timeoutID}));
 }
 
 

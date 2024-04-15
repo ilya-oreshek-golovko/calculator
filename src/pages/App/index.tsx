@@ -7,16 +7,15 @@ import { useDegreeInput } from "./hooks/AppHooks";
 
 export default function App() {
   
-  // useManualInputManagement({
-  //   handleButtunInput, handleOperationInput, handleLastCharacterRemove, handleFullRemove, AppState: state
-  // });
-  const messageToDisplay = useAppSelector((state) => state.CalculatorReducer.messageToDisplay);
-  const result = useAppSelector((state) => state.CalculatorReducer.result);
-
-  const DegreeInput = useDegreeInput();
+  const isShowPopup = useAppSelector((state) => state.CalculatorReducer.isShowPopup);
+  useDegreeInput();
 
   return (
     <div className={"background"}>
+      {
+        isShowPopup &&
+        <Popup />
+      }
       <section className={"calc-body"}>
         <Input />
         <div className={"bottom-block"}>
@@ -24,15 +23,6 @@ export default function App() {
           <Numbers />
         </div>
       </section>
-      {
-        messageToDisplay &&
-        <Popup messageToRender={messageToDisplay} />
-      }
-      {
-        result.length > 0 &&
-        <Popup messageToRender={result} />
-      }
-      <DegreeInput />
     </div>
   )
 }

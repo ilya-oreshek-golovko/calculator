@@ -1,9 +1,11 @@
 import Button from "@/pages/App/components/Button";
-import { useClickManagement } from "./hooks";
+import { useClickManagement, useManualInputNumbers } from "./hooks";
 import { memo } from "react";
 
 const Numbers = () => {
   const {handleNumberInput,handleEnterInput} = useClickManagement();
+
+  useManualInputNumbers(handleNumberInput, handleEnterInput);
 
   return (
     <div className={"numbers-block"}>

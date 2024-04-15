@@ -17,7 +17,7 @@ type TAllowedThirdPriorOperation = {
 
 interface IButtonProps{
     text: string,
-    onClick: THandleInput
+    onClick: (userInput? : string) => void
 }
 interface IAppState{
     input: Array<string | ReactElement>,

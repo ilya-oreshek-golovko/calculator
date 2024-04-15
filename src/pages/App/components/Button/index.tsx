@@ -1,10 +1,10 @@
 import { IButtonProps } from "@/types";
-import { memo } from "react";
+import { memo, MouseEvent } from "react";
 
 const Button = ({text, onClick} : IButtonProps) => {
   console.log("Button render");
   return (
-    <button className={"button-body"} onClick={onClick}>
+    <button className={"button-body"} onClick={(evt : MouseEvent<HTMLButtonElement>) => onClick(evt.currentTarget.innerText)}>
       {text}
     </button>
   )

@@ -11,17 +11,25 @@ const initialState : ICalculatorSlice = {
     result: "",
     isPowEntering: false,
     isDegreesEntering: false,
-    openBracketsCount : 0,
-    messageToDisplay: ""
+    openBracketsCount: 0,
+    messageToDisplay: "",
+    isShowPopup: false,
+    popupTitle: "",
+    popupDescription: "",
 };
 
 function isBracket(input : any): input is TBrackets{
     return input == "(" || input == ")";
 }
 
+function isLastHighPriorOperation(input : any){
+    const lastVal = input.at(-1) || "";
+    return typeof lastVal == "object";
+}
+
 function isLastNumber(input : any){
     const lastVal = input.at(-1) || "";
-    return !!Number(lastVal) || typeof lastVal == "object";
+    return !!Number(lastVal);
 }
 
 function isLastOperator(input : any){
@@ -33,6 +41,20 @@ const CalculatorSlice = createSlice({
     name: "calculator",
     initialState,
     reducers: {
+        showPopup(state, {payload} : PayloadAction<{title : string, description?: string}>){
+            clearTimeout(state.timeoutID);
+            state.isShowPopup = true;
+            state.popupTitle = payload.title;
+            state.popupDescription = payload.description ? payload.description : "";
+        },
+        setTimeoutID(state, {payload} : PayloadAction<{timeoutID : NodeJS.Timeout}>){
+            state.timeoutID = payload.timeoutID;
+        },
+        hidePopup(state){
+            state.isShowPopup = false;
+            state.popupTitle = "";
+            state.popupDescription = "";
+        },
         removeDegreeCharacter(state){
             const prevOperator = state.input.at(-1) as ReactElement;
             const {operation, userInput : prevUserInput} = prevOperator["props"] as IThirdPriorOperationProps;
@@ -60,10 +82,10 @@ const CalculatorSlice = createSlice({
             }
         },
         clearState: () => initialState,
-        setPow(state, {payload}){
+        setPow(state, {payload} : PayloadAction<{powType : string}>){
             const userInput = state.input.at(-1) as string;
 
-            if(!userInput || !Number(userInput)) throw Error("Not possible to parse user input to be powered");
+            if(!userInput && (!Number(userInput) || userInput != ")") ) throw Error("Not possible to parse user input to be powered");
             
             const newInput = state.input.slice(0, state.input.length - 1);
 
@@ -94,7 +116,7 @@ const CalculatorSlice = createSlice({
         },
         setTrigonometric(state, {payload} : PayloadAction<{operationType : TThirdPriorOperation}>){
             if(state.isDegreesEntering) throw Error("You haven't completed the previous operation input");
-            if(isLastNumber(state.input)) throw Error("Please enter any common operator before proceeding to this input");
+            if(isLastNumber(state.input) || isLastHighPriorOperation(state.input)) throw Error("Please enter any common operator before proceeding to this input");
             state.input.push(<ThirdPriorOperation key={Math.random()} userInput={"0"} operation={payload.operationType}/>);
             state.isDegreesEntering = true;
         },
@@ -119,7 +141,7 @@ const CalculatorSlice = createSlice({
         },
         setBrackets(state, {payload} : PayloadAction<{bracket : string}>){
             // TODO common
-            if(payload.bracket == ")" && state.openBracketsCount != 0 && (isLastNumber(state.input) || state.input.at(-1) == ")") || payload.bracket == "(" && isLastOperator(state.input)){
+            if(payload.bracket == ")" && state.openBracketsCount != 0 && (isLastNumber(state.input) || isLastHighPriorOperation(state.input) || state.input.at(-1) == ")") || payload.bracket == "(" && isLastOperator(state.input)){
                 state.input = [
                     ...state.input,
                     payload.bracket
@@ -131,11 +153,16 @@ const CalculatorSlice = createSlice({
         },
         setMessage(state, {payload} : PayloadAction<string>){
             state.messageToDisplay = payload;
-    
         },
         calculateResult(state){
-            if(state.input.length == 0) state.result = "Input is empty";
-            else state.result = parser(state.input);
+            if(state.input.length == 0){
+                state.result = "Input is empty"
+            }else{
+                clearTimeout(state.timeoutID);
+                state.result = parser(state.input);
+                state.isShowPopup = true;
+                state.popupTitle = state.result;
+            }
         },
         completePowInput(state){
             state.isPowEntering = false;
@@ -157,7 +184,7 @@ const CalculatorSlice = createSlice({
             state.isDegreesEntering = false;
         },
         addNumber(state, {payload} : PayloadAction<string>){
-            if(isLastNumber(state.input)){
+            if(isLastNumber(state.input) && !isLastHighPriorOperation(state.input)){
                 const lastVal = state.input.at(-1) as string;
                 const newInput = state.input.slice(0, state.input.length - 1);
 
@@ -203,6 +230,9 @@ const CalculatorSlice = createSlice({
 
 export default CalculatorSlice.reducer;
 export const {
+    showPopup,
+    hidePopup,
+    setTimeoutID,
     removeDegreeCharacter,
     removeLastCharacter, 
     clearState, 
