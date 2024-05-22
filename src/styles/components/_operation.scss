@@ -1,0 +1,33 @@
+@use '@styles/abstracts/utilities.scss' as utils;
+
+.sup-operation, .factorial-operation{
+    padding-left: 7px;
+}
+
+.sup, .factorial{
+    padding-left: 2px;
+    padding-right: 6px;
+    color: #111112;
+}
+.sup-operation{
+    display: flex;
+    .sup{
+        align-self: start;
+        font-size: 20px;
+    }
+}
+.sup-entering{
+    padding-left: 2px;
+    padding-right: 6px;
+    color: utils.$font-color;
+    background-color: #0c0cf2;
+}
+.trig-oper{
+    color: #111112;
+    align-self: end;
+    padding-left: 8px;
+    padding-right: 8px;
+    .operation-value{
+        color: utils.$font-color;
+    }
+}

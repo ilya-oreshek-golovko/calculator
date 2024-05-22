@@ -25,7 +25,7 @@ export default function handleFirstPriority(inputStr : Array<string>) : string{
             state.calculator = performCalculation;
         }else if(isNumber(currentVal) && state.isExcersiceStarted){
             state.SecondArg = Number(currentVal);
-            state.FirstArg = state.calculator!(state.FirstArg, state.SecondArg);
+            state.FirstArg = state.calculator(state.FirstArg, state.SecondArg);
         }
     }
     

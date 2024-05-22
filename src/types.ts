@@ -1,28 +1,29 @@
 import { ReactElement } from "react";
+import { MouseEvent } from "react";
 
-type THandleInput = (inputCharacter : string) => void;
+type THandleInput = (evt : MouseEvent<HTMLButtonElement>) => void;
 type TOneArgOperations = (first : number) => number;
 type TTwoArgsOperations = (first : number, second : number) => number;
-type TPow = "square" | "multiple";
+type TPow = "X2" | "Xn";
+type TrigonometricOperations = "sin" | "cos" | "tg";
 type TParsedUserInput = Array<string | IThirdPriorOperationProps>;
 type TParserResult = string | null;
-// type TAllowedThirdPriorOperation = {
-//     key : string,
-//     get : (props : string) => ReactElement
-// };
-type TThirdPriorOperation = "sin" | "cos" | "tan" | "^" | "!";
+type TBrackets = "(" | ")";
+
+type TThirdPriorOperation = "sin" | "cos" | "tg" | "^" | "!";
 type TAllowedThirdPriorOperation = {
     [key : string] : (userInput : string, power? : string) => ReactElement
 }
 
 interface IButtonProps{
     text: string,
-    clickHandler: THandleInput
+    onClick: (userInput? : string) => void
 }
 interface IAppState{
     input: Array<string | ReactElement>,
     result: string,
     isPowEntering: boolean,
+    isDegreesEntering : boolean,
     errorMessage: string
 }
 interface IUseManualInputManagement{
@@ -54,17 +55,22 @@ interface IMathOperation{
 //     "tan" : IMathOperation<T1>,
 // }
 interface IPopupProps{
-    messageToRender : string, 
-    clickHandler : () => void
+    messageToRender : string,
+    description?: string
 }
 interface IThirdPriorOperationProps{
     userInput : string, 
     operation : TThirdPriorOperation,
     power? : string
 }
+interface IUseBracketManagementProps{
+    input : Array<any>, 
+    setState : React.Dispatch<React.SetStateAction<IAppState>>,
+    isLastNumber : Function
+}
 
 
 export type{
-    IButtonProps, IAppState,IUseManualInputManagement, IPopupProps, IThirdPriorOperationProps, IMathOperation,
-    TOneArgOperations, TTwoArgsOperations, TPow, TParsedUserInput, TParserResult, TAllowedThirdPriorOperation
+    IButtonProps, IAppState,IUseManualInputManagement, IPopupProps, IThirdPriorOperationProps, IMathOperation, IUseBracketManagementProps,
+    TOneArgOperations, TTwoArgsOperations, TPow, TParsedUserInput, TParserResult, TAllowedThirdPriorOperation, TBrackets, TrigonometricOperations, TThirdPriorOperation
 }
